@@ -1,0 +1,72 @@
+<odoo>
+ 
+    	<record id="discografica_report_disc" model="ir.actions.report" >
+        <field name="name" >Listado de discos </field>
+        <field name="model">discografica.disc</field>
+        <field name="report_name">discografica.report_disc_view</field>
+        <field name="report_file">discografica.report_disc_view</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="binding_model_id" ref="model_discografica_disc"/>
+        <!-- Se puede añadir print_report_name, paperformat_id, binding_model_id-->
+      </record>
+
+        <template id="report_disc_view">
+        <!-- web.basic_layout-->
+          <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="disco">
+              <t t-call="web.external_layout">
+                <div class="page"> 
+                <h2>Disco: <span t-field="disco.name" /></h2>
+                <ul>
+                <li><strong>Fecha de alta:</strong><span t-field="disco.enrollment_date"/></li>
+                <li><strong>Artista:</strong><span t-field="disco.artist_id"/></li> 
+                <li><strong>Estilo:</strong><span t-field="disco.genre_id"/></li>
+                <li><strong>Año: </strong><span t-field="disco.year"/></li>
+<!--                 <li><strong></strong><span t-field="disco.cover"/> </li>
+ -->
+                <li><strong>Cantidad:</strong><span t-field="disco.qty"/></li>
+                <li><strong>Precio:</strong><span t-field="disco.price"/></li> 
+                <li><strong>Formato:</strong><span t-field="disco.format"/></li> 
+                <li><strong>Disponible:</strong><span t-field="disco.available"/></li>
+                </ul>
+                </div>
+              </t>
+            </t>
+          </t>
+        </template>
+          
+<!-- Para añadir un formato de papel podemos seguir la declaración que se especifica en este foro
+
+  https://www.odoo.com/es_ES/forum/ayuda-1/how-do-you-add-a-new-report-paper-format-in-a-module-using-xml-92372
+
+
+        <record id="discografica_paperformat_id" model="report.paperformat">
+            <field name="name">Discografica Paper Format</field>
+            <field name="margin_left">30</field>
+            <field name="margin_right">30</field>
+            <field name="margin_top">30</field>
+            <field name="margin_bottom">30</field>
+            <field name="orientation">Portrait</field>
+        </record>
+
+        <template id="listing">
+          <ul>
+            <li t-foreach="objects" t-as="object">
+              <a t-attf-href="#{ root }/objects/#{ object.id }">
+                <t t-esc="object.display_name"/>
+              </a>
+            </li>
+          </ul>
+        </template>
+        <template id="object">
+          <h1><t t-esc="object.display_name"/></h1>
+          <dl>
+            <t t-foreach="object._fields" t-as="field">
+              <dt><t t-esc="field"/></dt>
+              <dd><t t-esc="object[field]"/></dd>
+            </t>
+          </dl>
+        </template>
+-->
+
+</odoo>

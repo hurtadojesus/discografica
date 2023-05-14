@@ -1,0 +1,146 @@
+<odoo>
+  <data>
+    <!-- Definición explícita de las vistas tree y form -->
+    <record model='ir.ui.view' id='discografica_disc_tree_view'>
+      <field name='name'>discografica_disc_tree_view</field>
+      <field name='model'>discografica.disc</field>
+      <field name='arch' type='xml'>
+<!-- 
+**** Decoración para la vista tree
+decoration-muted: líneas en light grey
+decoration-danger: líneas en light red
+decoration-success: líneas en light green
+decoration-primary: líneas en light purple  
+decoration-info: líneas en light blue 
+decoration-warning: líneas en light brown
+decoration-bf: líneas en bold
+decoration-it: líneas en italic
+
+**** Destacar: decoration-warning="qty &lt; 5 " usando &lt; para "menor", &gt; para "mayor", etc...
+-->
+        <tree string='Listado de discos' decoration-danger="available != True" decoration-success="available == True" decoration-warning="qty &lt; 5 ">
+          <field name='name' />
+          <field name='year' />
+          <field name='genre_id' />
+          <field name='artist_id' />
+          <field name='qty' />
+          <field name='price' />
+          <field name='available' />
+          <field name='format' />
+        </tree>
+      </field>
+    </record>
+
+   <record model='ir.ui.view' id='discografica_disc_form_view'>
+      <field name='name'>discografica_disc_form_view</field>
+      <field name='model'>discografica.disc</field>
+      <field name='arch' type='xml'>
+
+
+        <form string='Listado de discos'>
+        <header>
+          <button name='accion_boton' type='object' string='NO stock'/>
+          <!-- <button name='nombre_funcion_a_definir_modelo' type='object' string='Palabra'/> -->
+        </header>
+          <sheet>
+<!-- 
+Destacar el uso del widget web_ribbon.
+Otros widgets pueden ser image, monetary (dos decimales), progressbar, percentpie, field_float_rating (estrellas en lugar de float)
+Para campos relacionales tenemos many2onebutton (indica si está seleccionado) y many2many_tags (muestra como etiquetas)
+-->
+            <widget name="web_ribbon" title="Agotado" attrs="{'invisible': [('available', '==', True)]}" modifiers="{'invisible':['available','==',True]" />
+            <group name='cabecera' string='Título del disco'>
+              <div>
+                <label for='name' class='oe_edit_only' />
+                <h1>
+                  <field name='name' placeholder='Título' nolabel='1' />
+                </h1>
+                <label for='year' class='oe_edit_only' />
+                <h2>
+                  <field name='year' placeholder='Año' nolabel='1' />
+                </h2>
+                <label for='artist_id' class='oe_edit_only' />
+                <h3>
+                  <field name='artist_id' />
+                </h3>
+                <label for='genre_id' class='oe_edit_only' />
+                <h4><field name='genre_id' /></h4>
+
+              </div>
+              <field name='cover' nolabel='1' widget='image' class='oe_right' options="{' preview_image':' image_medium',' size':[100,100]}" />
+            </group>
+            <notebook>
+              <page string='Más datos' >
+                <group name="group_top">
+                  <group name="group_header" colspan="2">
+                    <field name='enrollment_date' class='oe_read_only'/>
+<!-- 
+    class='oe_edit_only' Se muestra solo en modo edición 
+    class='oe_read_only' se muestra solo en modo lectura
+-->
+                  </group>
+                  <group  name="group_left" >
+                    <field name='qty' />
+                    <field name='available' />
+                  </group>
+                  <group name="group_right">
+                    <field name='format' />
+<!-- 
+Podemos definir atributos a los campos como invisible, requiered o read only según se cumpla una condición
+ -->
+                    <field name='price' widget='monetary'  attrs="{'invisible': [('available', '!=', True)]}"/>                                          
+                    
+                  </group>
+                </group>
+                
+              </page>
+              <page string='Canciones'>
+              </page>
+              <page string='Opiniones'>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+ 
+
+    <!-- Dejamos sin definir explícitamente las vistas de tree y form para artist y genre -->
+
+    <!-- Definición de las acciones de ventana -->
+    <record model='ir.actions.act_window' id='discografica_genre_action_window'>
+      <field name='name'>Estilos músicales</field>
+      <field name='res_model'>discografica.genre</field>
+      <field name='view_mode'>tree,form</field>
+    </record>
+    <record model='ir.actions.act_window' id='discografica_artist_action_window'>
+      <field name='name'>Artistas y Grupos</field>
+      <field name='res_model'>discografica.artist</field>
+      <field name='view_mode'>tree,form</field>
+    </record>
+    <record model='ir.actions.act_window' id='discografica_disc_action_window'>
+      <field name='name'>Discos</field>
+      <field name='res_model'>discografica.disc</field>
+      <field name='view_mode'>tree,form</field>
+    </record>
+
+
+    <menuitem id='top_discografica_menu' name='Discográfica' groups="discografica_users"/>
+    <menuitem id='disc_discografica_menu' name='Discos' parent='top_discografica_menu' groups="discografica_users"/>
+    <menuitem id='disc_action_menu' name='Ver discos' parent='disc_discografica_menu'
+      action='discografica_disc_action_window' groups="discografica_users"/>
+
+    <menuitem id='artist_discografica_menu' name='Artistas' parent='top_discografica_menu' groups="discografica_users"/>
+    <menuitem id='artist_action_menu' name='Ver artistas' parent='artist_discografica_menu'
+      action='discografica_artist_action_window' groups="discografica_admin"/>
+
+    <menuitem id='genre_discografica_menu' name='Estilos' parent='top_discografica_menu' groups="discografica_users"/>
+    <menuitem id='genre_action_menu' name='Ver estilos' parent='genre_discografica_menu'
+      action='discografica_genre_action_window' groups="discografica_admin"/>
+
+
+
+
+  </data>
+</odoo>

@@ -1,0 +1,7 @@
+<xpath expr="//page[@name='Opiniones']" position="after">
+    <page name="otros" id="otros">
+          <group>
+              <field name='price' />
+          </group>
+      </page>
+</xpath>
